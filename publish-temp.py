@@ -4,9 +4,8 @@ import adafruit_dht
 import paho.mqtt.client as mqtt
 import json
 
-# Initialize the DHT sensor
-# Use the correct pin (e.g., board.D4 corresponds to GPIO4)
-dht_device = adafruit_dht.DHT11(board.D4)  # Changed from DHT22 to DHT11
+
+dht_device = adafruit_dht.DHT11(board.D4)
 
 # MQTT setup
 MQTT_BROKER = "192.168.1.17"
@@ -15,11 +14,9 @@ MQTT_TOPIC = "binary/updates"
 
 def read_sensor():
     try:
-        # Read the temperature and humidity from the DHT11 sensor
         temperature_c = dht_device.temperature
         humidity = dht_device.humidity
         if temperature_c is not None and humidity is not None:
-            # Optionally convert the temperature to Fahrenheit
             temperature_f = temperature_c * 9 / 5 + 32
             return {"temperature_c": temperature_c, "temperature_f": temperature_f, "humidity": humidity}
         else:
@@ -29,7 +26,7 @@ def read_sensor():
         return None
 
 def connect_mqtt():
-    client = mqtt.Client("Pi_Temp_Humidity_Publisher")
+    client = mqtt.Client()
     client.connect(MQTT_BROKER, port=MQTT_PORT)
     return client
 
@@ -45,7 +42,7 @@ def main():
     try:
         while True:
             publish_sensor_data(client)
-            time.sleep(60)  # Adjust publish frequency as necessary
+            time.sleep(60)
     except KeyboardInterrupt:
         print("Stopped by User")
         dht_device.exit()
