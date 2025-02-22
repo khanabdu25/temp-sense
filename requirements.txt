@@ -1,3 +1,4 @@
 RPI.GPIO
 adafruit-blinka
 Adafruit-CircuitPython-DHT
+paho-mqtt
